@@ -1,0 +1,78 @@
+<div class="p-4 space-y-4">
+  <!-- Input Row -->
+  <div class="flex flex-wrap gap-2 items-end">
+    <div class="flex flex-col">
+      <label class="text-sm font-medium mb-1">Label</label>
+      <input
+        type="text"
+        placeholder="Label"
+        [(ngModel)]="newItem.label"
+        class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+      />
+    </div>
+
+    <div class="flex flex-col">
+      <label class="text-sm font-medium mb-1">Icon</label>
+      <select
+        [(ngModel)]="newItem.icon"
+        class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+      >
+        <option *ngFor="let ic of availableIcons" [value]="ic">{{ ic }}</option>
+      </select>
+    </div>
+
+    <button
+      (click)="addItem()"
+      class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+    >
+      Add
+    </button>
+  </div>
+
+  <!-- Drag List -->
+  <div
+    cdkDropList
+    (cdkDropListDropped)="drop($event)"
+    class="border border-dashed border-gray-400 p-2 rounded space-y-1"
+  >
+    <div
+      *ngFor="let item of menuItems"
+      cdkDrag
+      class="flex items-center p-2 bg-gray-100 rounded shadow-sm cursor-move"
+    >
+      <span class="material-icons mr-2 text-gray-600">{{ item.icon }}</span>
+      <span>{{ item.label }}</span>
+    </div>
+  </div>
+
+  <!-- Preview Component -->
+  <app-preview [menuItems]="menuItems"></app-preview>
+
+  <!-- Actions -->
+  <div class="space-x-2 mt-4">
+    <button
+      (click)="generateCode()"
+      class="border border-blue-600 text-blue-600 px-4 py-2 rounded hover:bg-blue-50 transition"
+    >
+      Generate Code
+    </button>
+    <button
+      (click)="copyCode()"
+      class="border border-gray-500 text-gray-700 px-4 py-2 rounded hover:bg-gray-100 transition"
+    >
+      Copy to Clipboard
+    </button>
+  </div>
+
+  <!-- Monaco Editors -->
+  <ngx-monaco-editor
+    *ngIf="generatedCode.html"
+    [options]="{ language: 'html', theme: 'vs-dark' }"
+    [ngModel]="generatedCode.html"
+  ></ngx-monaco-editor>
+
+  <ngx-monaco-editor
+    [options]="{ language: 'typescript', theme: 'vs-dark' }"
+    [ngModel]="generatedCode.ts"
+  ></ngx-monaco-editor>
+</div>
